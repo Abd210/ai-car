@@ -374,6 +374,10 @@ class _DashGemChatPageState extends State<DashGemChatPage>
 
   @override
   Widget build(BuildContext context) {
+    // We’ll grab MediaQuery padding so we can apply it to top/bottom bars:
+    final paddingTop = MediaQuery.of(context).padding.top;
+    final paddingBottom = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -395,10 +399,14 @@ class _DashGemChatPageState extends State<DashGemChatPage>
                   ),
                   child: Column(
                     children: [
-                      // Top bar
+                      // Top bar with extra height + top padding
                       Container(
-                        height: 56,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        height: 56 + paddingTop,
+                        padding: EdgeInsets.only(
+                          top: paddingTop,
+                          left: 8,
+                          right: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: kColorPrimary,
                           boxShadow: [
@@ -463,10 +471,15 @@ class _DashGemChatPageState extends State<DashGemChatPage>
                         ),
                       ),
 
-                      // Bottom bar
+                      // Bottom bar with bottom padding
                       Container(
                         color: kColorMint.withOpacity(0.2),
-                        padding: const EdgeInsets.all(4),
+                        padding: EdgeInsets.only(
+                          bottom: paddingBottom,
+                          top: 4,
+                          left: 4,
+                          right: 4,
+                        ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -647,7 +660,13 @@ class ChatBubble extends StatelessWidget {
                       if (chat.imageBytes != null) ...[
                         GestureDetector(
                           onTap: () => onTapImage(chat.imageBytes!),
-                          child: Image.memory(chat.imageBytes!, fit: BoxFit.cover),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
+                            child: Image.memory(
+                              chat.imageBytes!,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 8),
                       ],
@@ -710,7 +729,13 @@ class ChatBubble extends StatelessWidget {
                     if (chat.imageBytes != null) ...[
                       GestureDetector(
                         onTap: () => onTapImage(chat.imageBytes!),
-                        child: Image.memory(chat.imageBytes!, fit: BoxFit.cover),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
+                          child: Image.memory(
+                            chat.imageBytes!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -835,20 +860,11 @@ class _CarTireSpinnerState extends State<CarTireSpinner>
   Widget build(BuildContext context) {
     return RotationTransition(
       turns: _controller,
-      // Option A: Use a circle icon to simulate a simple tire
-      child: 
-        Image.asset('assets/wheel.png',
-          width: widget.size,
-          height: widget.size
-        )
-      
-
-      // Option B: If you have an actual tire image in assets (and declared in pubspec.yaml):
-      // child: Image.asset(
-      //   'assets/tire.png',
-      //   width: widget.size,
-      //   height: widget.size,
-      // ),
+      child: Image.asset(
+        'assets/wheel.png',
+        width: widget.size,
+        height: widget.size,
+      ),
     );
   }
 }
