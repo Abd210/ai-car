@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:http_parser/http_parser.dart'; // Needed for MediaType
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // <-- 1) Import
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 // Removed: import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -37,6 +38,14 @@ class ChatMessage {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 2) Make the status bar transparent with light icons
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+  ));
+
   runApp(const DashGemChatApp());
 }
 
@@ -374,11 +383,12 @@ class _DashGemChatPageState extends State<DashGemChatPage>
 
   @override
   Widget build(BuildContext context) {
-    // We’ll grab MediaQuery padding so we can apply it to top/bottom bars:
     final paddingTop = MediaQuery.of(context).padding.top;
     final paddingBottom = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
+      // 3) Let the body extend behind the status bar
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           // Full-size wave background
@@ -811,7 +821,6 @@ class _TypingBubble extends StatelessWidget {
                 ),
               ],
             ),
-            // Instead of spinning dots, we use CarTireSpinner
             child: const CarTireSpinner(size: 22),
           ),
 
@@ -843,7 +852,6 @@ class _CarTireSpinnerState extends State<CarTireSpinner>
   @override
   void initState() {
     super.initState();
-    // One rotation per 0.8 seconds. Adjust to your liking!
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -930,3 +938,4 @@ class WavePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
+//gg
