@@ -3,7 +3,7 @@ name: iOS-ipa-build
 on:
   workflow_dispatch:
 
-# ADD THIS:
+# Give the GitHub token write permissions for repo contents:
 permissions:
   contents: write
 
@@ -19,9 +19,8 @@ jobs:
           channel: 'stable'
           architecture: x64
 
-      - run: cd car_ai
       - run: flutter pub get
-      
+
       - run: pod repo update
         working-directory: ios
 
